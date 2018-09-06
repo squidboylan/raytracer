@@ -1,9 +1,5 @@
 use super::vector::Vector3D;
-
-#[derive(Default, Copy, Clone)]
-struct Color(
-    pub [u32; 3]
-);
+use super::color::Color;
 
 trait Object {
     fn get_normal(&self, coordinates: Vector3D) -> Vector3D;

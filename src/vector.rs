@@ -5,12 +5,28 @@ pub struct Vector3D(
     pub [f64; 3]
 );
 
+impl Vector3D {
+    pub fn normal(&self) -> Self {
+        let vals = &self.0;
+        let magnitude = (vals[0].powi(2) + vals[1].powi(2) + vals[2].powi(2)).sqrt();
+        Vector3D([vals[0]/magnitude, vals[1]/magnitude, vals[2]/magnitude])
+    }
+
+    pub fn normalize(&mut self) {
+        let vals = &mut self.0;
+        let magnitude = (vals[0].powi(2) + vals[1].powi(2) + vals[2].powi(2)).sqrt();
+        vals[0] /= magnitude;
+        vals[1] /= magnitude;
+        vals[2] /= magnitude;
+    }
+}
+
 impl Add for Vector3D {
     type Output = Vector3D;
 
     fn add(self, other: Vector3D) -> Vector3D {
-        let self_val = self.0;
-        let other_val = other.0;
+        let self_val = &self.0;
+        let other_val = &other.0;
         Vector3D([self_val[0] + other_val[0], self_val[1] + other_val[1], self_val[2] + other_val[2]])
     }
 }
@@ -19,8 +35,8 @@ impl Sub for Vector3D {
     type Output = Vector3D;
 
     fn sub(self, other: Vector3D) -> Vector3D {
-        let self_val = self.0;
-        let other_val = other.0;
+        let self_val = &self.0;
+        let other_val = &other.0;
         Vector3D([self_val[0] - other_val[0], self_val[1] - other_val[1], self_val[2] - other_val[2]])
     }
 }
@@ -40,7 +56,7 @@ impl DerefMut for Vector3D {
 }
 
 #[test]
-fn test_Vector3D() {
+fn test_vector3d() {
     let mut v1: Vector3D = Vector3D( [1.0, 2.0, 3.0] );
     let mut v2: Vector3D = Vector3D( [3.0, 2.0, 1.0] );
 
