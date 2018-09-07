@@ -9,14 +9,14 @@ mod color;
 use image::png::PNGEncoder;
 use image::ColorType;
 use std::fs::File;
-use camera::Ray;
+use camera::*;
 use object::Sphere;
 use object::Object;
 use std::thread;
 use std::sync::Arc;
 
 const IMAGE_RES: (usize, usize) = (1960, 1080);
-const AA: usize = 4;
+const AA: usize = 32;
 
 // Write the image to a file
 fn write_image(filename: &str, pixels: &[u8])
@@ -33,7 +33,7 @@ fn write_image(filename: &str, pixels: &[u8])
 
 fn main() {
     let camera_focal = vector::Vector3D([0.0, 0.0, 100.0]);
-    let rays = camera::generate_rays(camera_focal, IMAGE_RES.0 * AA, IMAGE_RES.1 * AA);
+    let rays = generate_rays(camera_focal, IMAGE_RES.0, IMAGE_RES.1, AA);
 
     let mut objects = Vec::new();
 
@@ -56,7 +56,7 @@ fn main() {
 
     let mut pixels: Vec<u8> = Vec::with_capacity(IMAGE_RES.0 * IMAGE_RES.1 * 3);
     {
-        let bands: Vec<&[Ray]> =
+        let bands: Vec<&[Pixel]> =
             rays.chunks(rows_per_band * IMAGE_RES.0).collect();
 
         crossbeam::scope(|spawner| {
@@ -78,20 +78,34 @@ fn main() {
 }
 
 // Convert the ray and object data to a vector that represents pixels
-fn render(rays: &[Ray], objects: &Vec<Sphere>) -> Vec<u8> {
-    let mut pixels: Vec<u8> = Vec::with_capacity(rays.len() * 3);
-    for i in rays {
-        let mut color: [u8; 3] = [255, 255, 255];
-        for j in objects {
-            let collision = j.get_collision(&i);
-            if collision != None {
-                let val = collision.unwrap();
-                color = j.get_color(i.origin + i.direction.mul_f64(val)).0;
+fn render(input_pixels: &[Pixel], objects: &Vec<Sphere>) -> Vec<u8> {
+    let mut pixels: Vec<u8> = Vec::with_capacity(input_pixels.len() * 3);
+
+    for pixel in input_pixels {
+        let mut final_color: [u16; 3] = [255, 255, 255];
+        for (num, i) in pixel.rays.iter().enumerate() {
+            let mut color: [u8; 3] = [255, 255, 255];
+            for j in objects {
+                let collision = j.get_collision(&i);
+                if collision != None {
+                    let val = collision.unwrap();
+                    color = j.get_color(i.origin + i.direction.mul_f64(val)).0;
+                }
+            }
+            // Calculate the AA stuff
+            if num == 0 {
+                final_color[0] = color[0] as u16;
+                final_color[1] = color[1] as u16;
+                final_color[2] = color[2] as u16;
+            } else {
+                final_color[0] = (final_color[0] + color[0] as u16)/2;
+                final_color[1] = (final_color[1] + color[1] as u16)/2;
+                final_color[2] = (final_color[2] + color[2] as u16)/2;
             }
         }
-        pixels.push(color[0]);
-        pixels.push(color[1]);
-        pixels.push(color[2]);
+        pixels.push(final_color[0] as u8);
+        pixels.push(final_color[1] as u8);
+        pixels.push(final_color[2] as u8);
     }
 
     pixels
