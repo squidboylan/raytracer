@@ -15,8 +15,10 @@ use object::Object;
 use std::thread;
 use std::sync::Arc;
 
-const IMAGE_RES: (usize, usize) = (100, 100);
-//const IMAGE_RES: (usize, usize) = (1960, 1080);
+const IMAGE_RES: (usize, usize) = (1960, 1080);
+const AA: usize = 4;
+
+// Write the image to a file
 fn write_image(filename: &str, pixels: &[u8])
     -> Result<(), std::io::Error> {
 
@@ -31,7 +33,7 @@ fn write_image(filename: &str, pixels: &[u8])
 
 fn main() {
     let camera_focal = vector::Vector3D([0.0, 0.0, 100.0]);
-    let rays = camera::generate_rays(camera_focal, IMAGE_RES.0, IMAGE_RES.1);
+    let rays = camera::generate_rays(camera_focal, IMAGE_RES.0 * AA, IMAGE_RES.1 * AA);
 
     let mut objects = Vec::new();
 
@@ -72,11 +74,10 @@ fn main() {
         });
     }
 
-    //let pixels = render(&rays, &objects);
-
     write_image("output.png", &pixels).unwrap();
 }
 
+// Convert the ray and object data to a vector that represents pixels
 fn render(rays: &[Ray], objects: &Vec<Sphere>) -> Vec<u8> {
     let mut pixels: Vec<u8> = Vec::with_capacity(rays.len() * 3);
     for i in rays {
