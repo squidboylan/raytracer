@@ -3,10 +3,7 @@ use super::color::Color;
 use std::f32::consts::PI;
 
 pub struct Camera {
-    focal_point: Vector3D,
-    resolution_w: usize,
-    resolution_h: usize,
-    sub_pixels: Vec<SubPixel>,
+    sub_pixels: Vec<Ray>,
     curr: usize,
 }
 
@@ -32,32 +29,27 @@ impl Camera {
                 let x = (2.0 * ((i + 0.5) * inv_w) - 1.0) * angle * aspectratio;
                 let direction = Vector3D([x, y, -1.0]);
 
-                sub_pixels.push(SubPixel::new(focal_point, direction.normal(), Color::default()));
+                sub_pixels.push(Ray::new(focal_point, direction.normal()));
             }
         }
 
         Camera {
-            focal_point,
-            resolution_w,
-            resolution_h,
             sub_pixels,
             curr: 0,
         }
     }
 }
 
-pub struct SubPixel {
+pub struct Ray {
     pub direction: Vector3D,
     pub origin: Vector3D,
-    pub color: Color,
 }
 
-impl SubPixel {
-    pub fn new(direction: Vector3D, origin: Vector3D, color: Color) -> Self {
-        SubPixel {
+impl Ray {
+    pub fn new(direction: Vector3D, origin: Vector3D) -> Self {
+        Ray {
             direction,
             origin,
-            color,
         }
     }
 }

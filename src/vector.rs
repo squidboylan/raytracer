@@ -19,6 +19,12 @@ impl Vector3D {
         vals[1] /= magnitude;
         vals[2] /= magnitude;
     }
+
+    pub fn dot(&self, vec2: &Vector3D) -> f64 {
+        let vals = &self.0;
+        let vec2_vals = vec2.0;
+        vals[0] * vec2_vals[0] + vals[1] * vec2_vals[1] + vals[2] * vec2_vals[2]
+    }
 }
 
 impl Add for Vector3D {
