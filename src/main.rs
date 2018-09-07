@@ -16,7 +16,7 @@ use std::thread;
 use std::sync::Arc;
 
 const IMAGE_RES: (usize, usize) = (1960, 1080);
-const AA: usize = 32;
+const AA: usize = 16;
 
 // Write the image to a file
 fn write_image(filename: &str, pixels: &[u8])
@@ -89,7 +89,7 @@ fn render(input_pixels: &[Pixel], objects: &Vec<Sphere>) -> Vec<u8> {
                 let collision = j.get_collision(&i);
                 if collision != None {
                     let val = collision.unwrap();
-                    color = j.get_color(i.origin + i.direction.mul_f64(val)).0;
+                    color = j.get_color(i.origin + i.direction.mul_f32(val)).0;
                 }
             }
             // Calculate the AA stuff

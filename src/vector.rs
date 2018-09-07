@@ -2,7 +2,7 @@ use std::ops::*;
 
 #[derive(Default, Debug, Copy, Clone, PartialEq)]
 pub struct Vector3D(
-    pub [f64; 3]
+    pub [f32; 3]
 );
 
 impl Vector3D {
@@ -20,13 +20,13 @@ impl Vector3D {
         vals[2] /= magnitude;
     }
 
-    pub fn dot(&self, vec2: &Vector3D) -> f64 {
+    pub fn dot(&self, vec2: &Vector3D) -> f32 {
         let vals = &self.0;
         let vec2_vals = vec2.0;
         vals[0] * vec2_vals[0] + vals[1] * vec2_vals[1] + vals[2] * vec2_vals[2]
     }
 
-    pub fn mul_f64(&self, scalar: f64) -> Vector3D {
+    pub fn mul_f32(&self, scalar: f32) -> Vector3D {
         let vals = &self.0;
         Vector3D([vals[0] * scalar, vals[1] * scalar, vals[2] * scalar])
     }
@@ -53,7 +53,7 @@ impl Sub for Vector3D {
 }
 
 impl Deref for Vector3D {
-    type Target = [f64; 3];
+    type Target = [f32; 3];
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -61,7 +61,7 @@ impl Deref for Vector3D {
 }
 
 impl DerefMut for Vector3D {
-    fn deref_mut (&mut self) -> &mut [f64; 3] {
+    fn deref_mut (&mut self) -> &mut [f32; 3] {
         &mut self.0
     }
 }

@@ -11,17 +11,17 @@ pub trait Object {
 
     // Returns the distance along the ray in which there is a collision with the
     // object
-    fn get_collision(&self, ray: &Ray) -> Option<f64>;
+    fn get_collision(&self, ray: &Ray) -> Option<f32>;
 }
 
 pub struct Sphere {
     center: Vector3D,
-    radius: f64,
+    radius: f32,
     color: Color,
 }
 
 impl Sphere {
-    pub fn new(center: Vector3D, radius: f64, color: Color) -> Self {
+    pub fn new(center: Vector3D, radius: f32, color: Color) -> Self {
         Sphere {
             center,
             radius,
@@ -39,7 +39,7 @@ impl Object for Sphere {
         self.color
     }
 
-    fn get_collision(&self, ray: &Ray) -> Option<f64> {
+    fn get_collision(&self, ray: &Ray) -> Option<f32> {
         // Equation for this was obtained from
         // https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
         let tmp = ray.origin - self.center;
