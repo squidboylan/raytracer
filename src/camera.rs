@@ -30,7 +30,7 @@ pub fn generate_rays(focal_point: Vector3D, resolution_w: usize, resolution_h: u
             let x = (2.0 * ((i_f32 + 0.5) * inv_w) - 1.0) * angle * aspectratio;
             let direction = Vector3D([x, y, -1.0]);
 
-            pixels[(j/aa * resolution_w) + i/aa].rays.push(Ray::new(focal_point.clone(), direction.normal()));
+            pixels[(j/aa * resolution_w) + i/aa].rays.push(Ray::new(direction.normal(), focal_point.clone()));
         }
     }
 

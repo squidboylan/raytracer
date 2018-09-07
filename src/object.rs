@@ -44,7 +44,7 @@ impl Object for Sphere {
         // https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
         let tmp = ray.origin.clone() - self.center.clone();
         let a = ray.direction.dot(&ray.direction);
-        let b = 2.0 * ray.direction.dot(&(ray.origin.clone() - self.center.clone()));
+        let b = 2.0 * ray.direction.dot(&tmp);
         let c = tmp.dot(&tmp) - self.radius.powi(2);
         let val = b * b - 4.0 * a * c;
         if val < 0.0 {

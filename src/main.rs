@@ -16,7 +16,7 @@ use std::thread;
 use std::sync::Arc;
 
 const IMAGE_RES: (usize, usize) = (1960, 1080);
-const AA: usize = 16;
+const AA: usize = 4;
 
 // Write the image to a file
 fn write_image(filename: &str, pixels: &[u8])
@@ -39,16 +39,16 @@ fn main() {
     let mut objects = Vec::new();
 
     let sphere_center = vector::Vector3D([0.0, 0.0, 0.0]);
-    objects.push(Sphere::new(sphere_center, 0.1, color::Color([255, 0, 0])));
+    objects.push(Sphere::new(sphere_center, 1.0, color::Color([255, 0, 0])));
 
-    let sphere_center = vector::Vector3D([0.2, 0.0, 0.0]);
-    objects.push(Sphere::new(sphere_center, 0.1, color::Color([255, 255, 0])));
+    let sphere_center = vector::Vector3D([2.0, 0.0, 0.0]);
+    objects.push(Sphere::new(sphere_center, 1.0, color::Color([255, 255, 0])));
 
-    let sphere_center = vector::Vector3D([0.0, 0.2, 0.0]);
-    objects.push(Sphere::new(sphere_center, 0.1, color::Color([255, 0, 255])));
+    let sphere_center = vector::Vector3D([0.0, 2.0, 0.0]);
+    objects.push(Sphere::new(sphere_center, 1.0, color::Color([255, 0, 255])));
 
-    let sphere_center = vector::Vector3D([0.2, 0.2, 0.0]);
-    objects.push(Sphere::new(sphere_center, 0.1, color::Color([0, 255, 0])));
+    let sphere_center = vector::Vector3D([2.0, 2.0, 0.0]);
+    objects.push(Sphere::new(sphere_center, 1.0, color::Color([0, 255, 0])));
 
     let objects = Arc::new(objects);
 
