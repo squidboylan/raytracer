@@ -5,4 +5,4 @@ authors = ["Caleb Boylan <calebboylan@gmail.com>"]
 
 [dependencies]
 image = "0.13.0"
-crossbeam = "0.2.8"
+crossbeam = "0.4.1"
