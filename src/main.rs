@@ -15,8 +15,8 @@ use object::Object;
 use std::thread;
 use std::sync::Arc;
 
-const IMAGE_RES: (usize, usize) = (1960, 1080);
-const AA: usize = 4;
+const IMAGE_RES: (usize, usize) = (1920, 1080);
+const AA: usize = 32;
 
 // Write the image to a file
 fn write_image(filename: &str, pixels: &[u8])
@@ -52,20 +52,14 @@ fn main() {
 
     let objects = Arc::new(objects);
 
-    let nthreads = 8;
-    let rows_per_band = IMAGE_RES.1 / nthreads + 1;
-
     let mut pixels: Vec<u8> = Vec::with_capacity(IMAGE_RES.0 * IMAGE_RES.1 * 3);
     {
-        let bands: Vec<&[Pixel]> =
-            rays.chunks(rows_per_band * IMAGE_RES.0).collect();
-
         crossbeam::scope(|spawner| {
             let mut threads = Vec::new();
-            for band in bands.into_iter() {
+            for view_port in view_port_chunks {
                 let objects1 = objects.clone();
                 let handle = spawner.spawn(move || {
-                    render(band, &objects1)
+                    render(view_port, &objects1)
                 });
                 threads.push(handle);
             }
@@ -79,10 +73,12 @@ fn main() {
 }
 
 // Convert the ray and object data to a vector that represents pixels
-fn render(input_pixels: &[Pixel], objects: &Vec<Sphere>) -> Vec<u8> {
-    let mut pixels: Vec<u8> = Vec::with_capacity(input_pixels.len() * 3);
+fn render(view_port_chunk: ViewPortChunk, objects: &Vec<Sphere>) -> Vec<u8> {
+    let size_hint = view_port_chunk.size_hint();
+    let pixels_n = size_hint.1.unwrap() - size_hint.0;
+    let mut pixels: Vec<u8> = Vec::with_capacity(pixels_n * 3);
 
-    for pixel in input_pixels {
+    for pixel in view_port_chunk {
         let mut final_color: [u16; 3] = [255, 255, 255];
         for (num, i) in pixel.rays.iter().enumerate() {
             let mut color: [u8; 3] = [255, 255, 255];
