@@ -1,6 +1,6 @@
 use std::ops::*;
 
-#[derive(Default, Debug, Copy, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct Vector3D(
     pub [f32; 3]
 );

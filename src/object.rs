@@ -32,7 +32,7 @@ impl Sphere {
 
 impl Object for Sphere {
     fn get_normal(&self, coordinates: Vector3D) -> Vector3D {
-        (coordinates - self.center).normal()
+        (coordinates.clone() - self.center.clone()).normal()
     }
 
     fn get_color(&self, coordinates: Vector3D) -> Color {
@@ -42,9 +42,9 @@ impl Object for Sphere {
     fn get_collision(&self, ray: &Ray) -> Option<f32> {
         // Equation for this was obtained from
         // https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
-        let tmp = ray.origin - self.center;
+        let tmp = ray.origin.clone() - self.center.clone();
         let a = ray.direction.dot(&ray.direction);
-        let b = 2.0 * ray.direction.dot(&(ray.origin - self.center));
+        let b = 2.0 * ray.direction.dot(&(ray.origin.clone() - self.center.clone()));
         let c = tmp.dot(&tmp) - self.radius.powi(2);
         let val = b * b - 4.0 * a * c;
         if val < 0.0 {

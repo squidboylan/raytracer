@@ -32,8 +32,9 @@ fn write_image(filename: &str, pixels: &[u8])
 }
 
 fn main() {
-    let camera_focal = vector::Vector3D([0.0, 0.0, 100.0]);
-    let rays = generate_rays(camera_focal, IMAGE_RES.0, IMAGE_RES.1, AA);
+    let camera_focal = vector::Vector3D([0.0, 0.0, 10.0]);
+    let nthreads = 16;
+    let view_port_chunks = generate_view_port_chunks(camera_focal, IMAGE_RES.0, IMAGE_RES.1, AA, nthreads);
 
     let mut objects = Vec::new();
 
@@ -89,7 +90,7 @@ fn render(input_pixels: &[Pixel], objects: &Vec<Sphere>) -> Vec<u8> {
                 let collision = j.get_collision(&i);
                 if collision != None {
                     let val = collision.unwrap();
-                    color = j.get_color(i.origin + i.direction.mul_f32(val)).0;
+                    color = j.get_color(i.origin.clone() + i.direction.mul_f32(val)).0;
                 }
             }
             // Calculate the AA stuff
