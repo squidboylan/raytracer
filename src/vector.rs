@@ -25,6 +25,11 @@ impl Vector3D {
         let vec2_vals = vec2.0;
         vals[0] * vec2_vals[0] + vals[1] * vec2_vals[1] + vals[2] * vec2_vals[2]
     }
+
+    pub fn mul_f64(&self, scalar: f64) -> Vector3D {
+        let vals = &self.0;
+        Vector3D([vals[0] * scalar, vals[1] * scalar, vals[2] * scalar])
+    }
 }
 
 impl Add for Vector3D {

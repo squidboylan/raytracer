@@ -1,2 +1,2 @@
 #[derive(Default, Debug, Copy, Clone)]
-pub struct Color(pub [u32; 3]);
+pub struct Color(pub [u8; 3]);
